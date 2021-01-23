@@ -1,0 +1,109 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Bookphone
+paths:
+  /v1/phones:
+    put:
+      summary: book a phone
+      requestBody:
+        description: phone and user IDs
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneUserIds'
+      operationId: BookPhone
+      tags:
+        - bookphone
+      responses:
+        '204':
+          description: booked succesfully
+        '404':
+          description: A phone with the specified ID was not found.
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/phones/{phoneId}:
+    get:
+      summary: Info for a specific phone
+      operationId: exposePhoneById
+      tags:
+        - phones
+      parameters:
+        - name: phoneId
+          in: path
+          required: true
+          description: The id of the phone to retrieve
+          schema:
+            type: long
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phone"
+        '404':
+          description: A phone with the specified ID was not found.
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    PhoneUserIds:
+      type: object
+      required:
+        - phoneid
+        - userid
+      properties:
+        phoneid:
+          type: integer
+          format: int64
+        userid:
+          type: integer
+          format: int64
+    User:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Phone:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: long
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        bookedAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
