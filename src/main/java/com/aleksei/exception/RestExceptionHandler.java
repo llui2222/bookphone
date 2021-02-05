@@ -1,40 +1,29 @@
 package com.aleksei.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 import javax.persistence.EntityNotFoundException;
 
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice
 @Slf4j
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+@RestControllerAdvice
+public class RestExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Error> handleEntityNotFound(
-            EntityNotFoundException ex) {
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    protected Error handleEntityNotFound(EntityNotFoundException ex) {
         Error error = new Error(ex.getMessage(), ex);
-        return buildResponseEntity(error, NOT_FOUND);
+        return error;
     }
 
     @ExceptionHandler(PhoneIsAlreadyBooked.class)
-    protected ResponseEntity<Error> handlePhoneIsAlreadyBooked(
-            EntityNotFoundException ex) {
+    @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+    protected Error handlePhoneIsAlreadyBooked(PhoneIsAlreadyBooked ex) {
         Error error = new Error(ex.getMessage(), ex);
-        return buildResponseEntity(error, NOT_ACCEPTABLE);
+        return error;
     }
-
-    private ResponseEntity<Error> buildResponseEntity(Error error, HttpStatus status) {
-        return ResponseEntity.status(status).body(error);
-    }
-
 }

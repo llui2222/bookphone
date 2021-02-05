@@ -5,6 +5,8 @@ import com.aleksei.repository.PhoneRepository;
 import com.aleksei.repository.UserRepository;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions.*;
+import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -53,6 +55,20 @@ class BookphoneTests extends AIntegrationTest {
                 ;
     }
 
+    @Test
+    void tryToBookBookedPhone() throws Exception {
+        mockMvc.perform(
+                put(RESOURCE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"phoneid\":\"1\", \"userid\":\"1\"}"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(
+                put(RESOURCE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"phoneid\":\"1\", \"userid\":\"1\"}"))
+                .andExpect(status().is4xxClientError());
+    }
     @Test
     void showPhoneById_Booked() throws Exception {
         Phone phone = new Phone();

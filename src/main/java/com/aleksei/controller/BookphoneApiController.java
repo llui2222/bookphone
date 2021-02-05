@@ -5,6 +5,7 @@ import com.aleksei.api.BookphoneApi;
 import com.aleksei.api.PhonesApi;
 import com.aleksei.api.model.Phone;
 import com.aleksei.api.model.PhoneUserIds;
+import com.aleksei.exception.PhoneIsAlreadyBooked;
 import com.aleksei.service.BookphoneService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
